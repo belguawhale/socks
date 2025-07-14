@@ -10,6 +10,7 @@ interface MusicPlayerProps {
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
+  const volumeRef = useRef(50);
   const [tempo, setTempo] = useState(120);
   const pianoRef = useRef<SoundFont.Player>(null);
   const partRef = useRef<Tone.Part | null>(null);
@@ -63,6 +64,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
         // Don't start Tone.js here - wait for user interaction
         const audioContext = Tone.getContext().rawContext;
         pianoRef.current = await SoundFont.instrument(audioContext, 'acoustic_grand_piano');
+
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to load piano soundfont:', error);
@@ -90,7 +92,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
     partRef.current = new Tone.Part((time, event) => {
       console.log("Tone.Part callback", time, event)
       if (pianoRef.current) {
-        const adjustedGain = (volume / 100) * event.gain;
+        const adjustedGain = (volumeRef.current / 100) * event.gain;
         pianoRef.current.play(event.note, time, {
           duration: event.duration,
           gain: adjustedGain
@@ -100,7 +102,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
 
     partRef.current.loop = false;
 
-  }, [volume, isLoading]);
+  }, [isLoading]);
 
   const togglePlayPause = async () => {
     if (isLoading || !pianoRef.current || !partRef.current) return;
@@ -135,7 +137,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   };
 
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(parseInt(event.target.value));
+    const newVolume = parseInt(event.target.value);
+    setVolume(newVolume);
+    volumeRef.current = newVolume;
   };
 
   const handleTempoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
