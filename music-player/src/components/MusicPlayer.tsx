@@ -16,22 +16,45 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   const [isLoading, setIsLoading] = useState(true);
   const endEventRef = useRef<number | null>(null);
 
-  // Twinkle Twinkle Little Star melody (C major)
-  const twinkleMelody = [
-    { note: 'C4', time: 0 },
-    { note: 'C4', time: 0.5 },
-    { note: 'G4', time: 1 },
-    { note: 'G4', time: 1.5 },
-    { note: 'A4', time: 2 },
-    { note: 'A4', time: 2.5 },
-    { note: 'G4', time: 3 },
-    { note: 'F4', time: 4 },
-    { note: 'F4', time: 4.5 },
-    { note: 'E4', time: 5 },
-    { note: 'E4', time: 5.5 },
-    { note: 'D4', time: 6 },
-    { note: 'D4', time: 6.5 },
-    { note: 'C4', time: 7 },
+  // Combined arrangement: bass and melody only
+  const twinkleArrangement = [
+    // Beat 0
+    { note: 'C2', time: 0, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'C4', time: 0, type: 'melody', duration: 0.5, gain: 1.0 },
+    { note: 'C4', time: 0.5, type: 'melody', duration: 0.5, gain: 1.0 },
+
+    // Beat 1
+    { note: 'E2', time: 1, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'G4', time: 1, type: 'melody', duration: 0.5, gain: 1.0 },
+    { note: 'G4', time: 1.5, type: 'melody', duration: 0.5, gain: 1.0 },
+
+    // Beat 2
+    { note: 'F2', time: 2, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'A4', time: 2, type: 'melody', duration: 0.5, gain: 1.0 },
+    { note: 'A4', time: 2.5, type: 'melody', duration: 0.5, gain: 1.0 },
+
+    // Beat 3
+    { note: 'E2', time: 3, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'G4', time: 3, type: 'melody', duration: 1, gain: 1.0 },
+
+    // Beat 4
+    { note: 'D2', time: 4, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'F4', time: 4, type: 'melody', duration: 0.5, gain: 1.0 },
+    { note: 'F4', time: 4.5, type: 'melody', duration: 0.5, gain: 1.0 },
+
+    // Beat 5
+    { note: 'C2', time: 5, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'E4', time: 5, type: 'melody', duration: 0.5, gain: 1.0 },
+    { note: 'E4', time: 5.5, type: 'melody', duration: 0.5, gain: 1.0 },
+
+    // Beat 6
+    { note: 'G2', time: 6, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'D4', time: 6, type: 'melody', duration: 0.5, gain: 1.0 },
+    { note: 'D4', time: 6.5, type: 'melody', duration: 0.5, gain: 1.0 },
+
+    // Beat 7
+    { note: 'C2', time: 7, type: 'bass', duration: 1, gain: 0.7 },
+    { note: 'C4', time: 7, type: 'melody', duration: 1, gain: 1.0 },
   ];
 
   useEffect(() => {
@@ -60,13 +83,20 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   useEffect(() => {
     if (!pianoRef.current || isLoading) return;
 
-    // Recreate the musical part when volume changes
+    // Dispose existing part
     partRef.current?.dispose();
-    partRef.current = new Tone.Part((time, note) => {
+
+    // Create single part for the entire arrangement
+    partRef.current = new Tone.Part((time, event) => {
+      console.log("Tone.Part callback", time, event)
       if (pianoRef.current) {
-        pianoRef.current.play(note.note, time, { duration: 0.5, gain: volume / 100 });
+        const adjustedGain = (volume / 100) * event.gain;
+        pianoRef.current.play(event.note, time, {
+          duration: event.duration,
+          gain: adjustedGain
+        });
       }
-    }, twinkleMelody);
+    }, twinkleArrangement);
 
     partRef.current.loop = false;
 
@@ -89,18 +119,16 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
       setIsPlaying(false);
     } else {
       partRef.current.start(0);
-      
-      // Calculate song duration dynamically from melody
-      const lastNoteTime = Math.max(...twinkleMelody.map(note => note.time));
-      const noteDuration = 0.5; // Duration of each note
-      const songEndTime = lastNoteTime + noteDuration;
-      
+
+      const songEndTime = Math.max(...twinkleArrangement.map(event => event.time + event.duration));
       endEventRef.current = Tone.getTransport().schedule((time) => {
+        // Calculate song duration dynamically from arrangement
+        console.log("end of playing");
         setIsPlaying(false);
         Tone.getTransport().stop();
         endEventRef.current = null;
-      }, `${songEndTime}n`); // Use calculated end time in quarter notes
-      
+      }, songEndTime);
+
       Tone.getTransport().start();
       setIsPlaying(true);
     }
