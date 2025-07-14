@@ -69,25 +69,19 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
 
   }, [volume, isLoading]);
 
-  useEffect(() => {
-    if (partRef.current) {
-      Tone.Transport.bpm.value = tempo;
-    }
-  }, [tempo]);
-
   const togglePlayPause = async () => {
     if (isLoading || !pianoRef.current || !partRef.current) return;
 
-    if (Tone.context.state !== 'running') {
+    if (Tone.getContext().state !== 'running') {
       await Tone.start();
     }
 
     if (isPlaying) {
-      Tone.Transport.stop();
+      Tone.getTransport().stop();
       partRef.current.stop();
     } else {
       partRef.current.start(0);
-      Tone.Transport.start();
+      Tone.getTransport().start();
     }
 
     setIsPlaying(!isPlaying);
@@ -98,7 +92,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   };
 
   const handleTempoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTempo(parseInt(event.target.value));
+    const tempo = parseInt(event.target.value);
+    Tone.getTransport().bpm.value = tempo;
+    setTempo(tempo);
   };
 
   return (
