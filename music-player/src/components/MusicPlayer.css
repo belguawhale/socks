@@ -50,6 +50,19 @@
   transform: scale(0.95);
 }
 
+.play-pause-btn.loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.play-pause-btn.loading:hover {
+  transform: none;
+}
+
+.play-pause-btn:disabled {
+  cursor: not-allowed;
+}
+
 .player-sliders {
   display: flex;
   flex-direction: column;

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as Tone from 'tone';
+import SoundFont from 'soundfont-player';
 import './MusicPlayer.css';
 
 interface MusicPlayerProps {
@@ -9,9 +10,10 @@ interface MusicPlayerProps {
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
-  const [tempo, setTempo] = useState(100);
-  const synthRef = useRef<Tone.Synth | null>(null);
+  const [tempo, setTempo] = useState(120);
+  const pianoRef = useRef<any>(null);
   const partRef = useRef<Tone.Part | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Twinkle Twinkle Little Star melody (C major)
   const twinkleMelody = [
@@ -32,48 +34,62 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   ];
 
   useEffect(() => {
-    // Initialize Tone.js synth
-    synthRef.current = new Tone.Synth().toDestination();
-    
-    // Create the musical part
-    partRef.current = new Tone.Part((time, note) => {
-      synthRef.current?.triggerAttackRelease(note.note, '4n', time);
-    }, twinkleMelody);
-    
-    partRef.current.loop = true;
-    partRef.current.loopEnd = '8m';
+    const initializePiano = async () => {
+      try {
+        // Don't start Tone.js here - wait for user interaction
+        const audioContext = Tone.getContext().rawContext;
+        pianoRef.current = await SoundFont.instrument(audioContext, 'acoustic_grand_piano');
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Failed to load piano soundfont:', error);
+        setIsLoading(false);
+      }
+    };
+
+    initializePiano();
 
     return () => {
-      synthRef.current?.dispose();
       partRef.current?.dispose();
     };
   }, []);
 
   useEffect(() => {
-    if (synthRef.current) {
-      synthRef.current.volume.value = Tone.gainToDb(volume / 100);
-    }
-  }, [volume]);
+    if (!pianoRef.current || isLoading) return;
+
+    // Recreate the musical part when volume changes
+    partRef.current?.dispose();
+    partRef.current = new Tone.Part((time, note) => {
+      if (pianoRef.current) {
+        pianoRef.current.play(note.note, time, { duration: 0.5, gain: volume / 100 });
+      }
+    }, twinkleMelody);
+
+    partRef.current.loop = true;
+    partRef.current.loopEnd = '8m';
+
+  }, [volume, isLoading]);
 
   useEffect(() => {
     if (partRef.current) {
-      Tone.Transport.bpm.value = (tempo / 100) * 120; // Base tempo 120 BPM
+      Tone.Transport.bpm.value = tempo;
     }
   }, [tempo]);
 
   const togglePlayPause = async () => {
+    if (isLoading || !pianoRef.current || !partRef.current) return;
+
     if (Tone.context.state !== 'running') {
       await Tone.start();
     }
 
     if (isPlaying) {
       Tone.Transport.stop();
-      partRef.current?.stop();
+      partRef.current.stop();
     } else {
-      partRef.current?.start(0);
+      partRef.current.start(0);
       Tone.Transport.start();
     }
-    
+
     setIsPlaying(!isPlaying);
   };
 
@@ -90,13 +106,14 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
       <div className="player-header">
         <h2>Music Player</h2>
       </div>
-      
+
       <div className="player-controls">
-        <button 
-          className={`play-pause-btn ${isPlaying ? 'playing' : 'paused'}`}
+        <button
+          className={`play-pause-btn ${isPlaying ? 'playing' : 'paused'} ${isLoading ? 'loading' : ''}`}
           onClick={togglePlayPause}
+          disabled={isLoading}
         >
-          {isPlaying ? '⏸️' : '▶️'}
+          {isLoading ? '⏳' : (isPlaying ? '⏸️' : '▶️')}
         </button>
       </div>
 
@@ -115,12 +132,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
         </div>
 
         <div className="slider-group">
-          <label htmlFor="tempo-slider">Tempo: {tempo}%</label>
+          <label htmlFor="tempo-slider">Tempo: {tempo} BPM</label>
           <input
             id="tempo-slider"
             type="range"
-            min="50"
-            max="200"
+            min="60"
+            max="180"
             value={tempo}
             onChange={handleTempoChange}
             className="slider tempo-slider"
