@@ -11,9 +11,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(50);
   const [tempo, setTempo] = useState(120);
-  const pianoRef = useRef<any>(null);
+  const pianoRef = useRef<SoundFont.Player>(null);
   const partRef = useRef<Tone.Part | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const endEventRef = useRef<number | null>(null);
 
   // Twinkle Twinkle Little Star melody (C major)
   const twinkleMelody = [
@@ -50,6 +51,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
 
     return () => {
       partRef.current?.dispose();
+      if (endEventRef.current !== null) {
+        Tone.getTransport().clear(endEventRef.current);
+      }
     };
   }, []);
 
@@ -64,8 +68,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
       }
     }, twinkleMelody);
 
-    partRef.current.loop = true;
-    partRef.current.loopEnd = '8m';
+    partRef.current.loop = false;
 
   }, [volume, isLoading]);
 
@@ -79,12 +82,28 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
     if (isPlaying) {
       Tone.getTransport().stop();
       partRef.current.stop();
+      if (endEventRef.current !== null) {
+        Tone.getTransport().clear(endEventRef.current);
+        endEventRef.current = null;
+      }
+      setIsPlaying(false);
     } else {
       partRef.current.start(0);
+      
+      // Calculate song duration dynamically from melody
+      const lastNoteTime = Math.max(...twinkleMelody.map(note => note.time));
+      const noteDuration = 0.5; // Duration of each note
+      const songEndTime = lastNoteTime + noteDuration;
+      
+      endEventRef.current = Tone.getTransport().schedule((time) => {
+        setIsPlaying(false);
+        Tone.getTransport().stop();
+        endEventRef.current = null;
+      }, `${songEndTime}n`); // Use calculated end time in quarter notes
+      
       Tone.getTransport().start();
+      setIsPlaying(true);
     }
-
-    setIsPlaying(!isPlaying);
   };
 
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
