@@ -95,7 +95,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ songData }) => {
   return (
     <div className="music-player">
       <div className="player-header">
-        <h2>Music Player</h2>
+        <h2>My Momma Don't Wear No Socks</h2>
       </div>
 
       <div className="player-controls">
