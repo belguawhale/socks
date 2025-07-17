@@ -69,6 +69,33 @@ const mommaDontWearNoSocksArrangement: SongEvent[] = [
     { note: 'B3', time: 3.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'D4', time: 3.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'G4', time: 3.5, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'C3', time: 4, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'C4', time: 4.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'E4', time: 4.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'G4', time: 4.5, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'A2', time: 5, type: 'bass', duration: 1, gain: 1.0 },
+    { note: 'A3', time: 5.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'C4', time: 5.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'E4', time: 5.5, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'D3', time: 6, type: 'bass', duration: 1, gain: 1.0 },
+    { note: 'D4', time: 6.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'F4', time: 6.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'A4', time: 6.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'G2', time: 6.75, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'A2', time: 7.25, type: 'bass', duration: 0.25, gain: 1.0 },
+    { note: 'B2', time: 7.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'B3', time: 7.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'D4', time: 7.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'G4', time: 7.5, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'C3', time: 8, type: 'bass', duration: 0.25, gain: 1.0 },
+    { note: 'C4', time: 8, type: 'bass', duration: 0.25, gain: 1.0 },
+    { note: 'E4', time: 8, type: 'bass', duration: 0.25, gain: 1.0 },
+    { note: 'G4', time: 8, type: 'bass', duration: 0.25, gain: 1.0 },
 ];
 
 const cMajorScale: SongEvent[] = [
