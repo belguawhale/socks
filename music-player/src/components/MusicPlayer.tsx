@@ -2,17 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as Tone from 'tone';
 import SoundFont from 'soundfont-player';
 import './MusicPlayer.css';
-import song, { type SongEvent } from '../data/song';
+import { type SongEvent } from '../data/song';
+import { INITIAL_TEMPO, INITIAL_VOLUME } from '../utils/constants';
 
 interface MusicPlayerProps {
-  audioSrc?: string;
+  songData: SongEvent[];
 }
 
-const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
+const MusicPlayer: React.FC<MusicPlayerProps> = ({ songData }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(50);
-  const volumeRef = useRef(50);
-  const [tempo, setTempo] = useState(120);
+  const [volume, setVolume] = useState(INITIAL_VOLUME);
+  const volumeRef = useRef(INITIAL_VOLUME);
+  const [tempo, setTempo] = useState(INITIAL_TEMPO);
   const pianoRef = useRef<SoundFont.Player>(null);
   const partRef = useRef<Tone.Part | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +24,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
         // Don't start Tone.js here - wait for user interaction
         const audioContext = Tone.getContext().rawContext;
         pianoRef.current = await SoundFont.instrument(audioContext, 'acoustic_grand_piano');
-        Tone.getTransport().bpm.value = tempo;
+        Tone.getTransport().bpm.value = INITIAL_TEMPO;
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to load piano soundfont:', error);
@@ -54,12 +55,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
           gain: adjustedGain
         });
       }
-    }, song);
+    }, songData);
 
     partRef.current.loop = true;
     partRef.current.loopEnd = 24;
 
-  }, [isLoading]);
+  }, [isLoading, songData]);
 
   const togglePlayPause = async () => {
     if (isLoading || !pianoRef.current || !partRef.current) return;
