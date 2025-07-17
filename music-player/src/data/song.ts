@@ -47,4 +47,55 @@ const twinkleArrangement: SongEvent[] = [
     { note: 'C4', time: 7, type: 'melody', duration: 1, gain: 1.0 },
 ];
 
-export default twinkleArrangement; 
+const mommaDontWearNoSocksArrangement: SongEvent[] = [
+    { note: 'C3', time: 0, type: 'bass', duration: 1, gain: 1.0 },
+    { note: 'C4', time: 0.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'E4', time: 0.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'G4', time: 0.5, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'A2', time: 1, type: 'bass', duration: 1, gain: 1.0 },
+    { note: 'A3', time: 1.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'C4', time: 1.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'E4', time: 1.5, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'D3', time: 2, type: 'bass', duration: 1, gain: 1.0 },
+    { note: 'D4', time: 2.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'F4', time: 2.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'A4', time: 2.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'G2', time: 2.75, type: 'bass', duration: 0.5, gain: 1.0 },
+
+    { note: 'A2', time: 3.25, type: 'bass', duration: 0.25, gain: 1.0 },
+    { note: 'B2', time: 3.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'B3', time: 3.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'D4', time: 3.5, type: 'bass', duration: 0.5, gain: 1.0 },
+    { note: 'G4', time: 3.5, type: 'bass', duration: 0.5, gain: 1.0 },
+];
+
+const cMajorScale: SongEvent[] = [
+    { note: 'C2', time: 0, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'D2', time: 0.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'E2', time: 1, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'F2', time: 1.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'G2', time: 2, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'A2', time: 2.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'B2', time: 3, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'C3', time: 3.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'D3', time: 4, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'E3', time: 4.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'F3', time: 5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'G3', time: 5.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'A3', time: 6, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'B3', time: 6.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'C4', time: 7, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'D4', time: 7.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'E4', time: 8, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'F4', time: 8.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'G4', time: 9, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'A4', time: 9.5, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'B4', time: 10, type: 'bass', duration: 0.5, gain: 0.7 },
+    { note: 'C5', time: 10.5, type: 'bass', duration: 0.5, gain: 0.7 },
+];
+
+// export default twinkleArrangement;
+// export default cMajorScale;
+export default mommaDontWearNoSocksArrangement; 
