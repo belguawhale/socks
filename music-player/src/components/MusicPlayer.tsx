@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as Tone from 'tone';
 import SoundFont from 'soundfont-player';
 import './MusicPlayer.css';
+import song, { type SongEvent } from '../data/song';
 
 interface MusicPlayerProps {
   audioSrc?: string;
@@ -17,54 +18,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   const [isLoading, setIsLoading] = useState(true);
   const endEventRef = useRef<number | null>(null);
 
-  // Combined arrangement: bass and melody only
-  const twinkleArrangement = [
-    // Beat 0
-    { note: 'C2', time: 0, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'C4', time: 0, type: 'melody', duration: 0.5, gain: 1.0 },
-    { note: 'C4', time: 0.5, type: 'melody', duration: 0.5, gain: 1.0 },
-
-    // Beat 1
-    { note: 'E2', time: 1, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'G4', time: 1, type: 'melody', duration: 0.5, gain: 1.0 },
-    { note: 'G4', time: 1.5, type: 'melody', duration: 0.5, gain: 1.0 },
-
-    // Beat 2
-    { note: 'F2', time: 2, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'A4', time: 2, type: 'melody', duration: 0.5, gain: 1.0 },
-    { note: 'A4', time: 2.5, type: 'melody', duration: 0.5, gain: 1.0 },
-
-    // Beat 3
-    { note: 'E2', time: 3, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'G4', time: 3, type: 'melody', duration: 1, gain: 1.0 },
-
-    // Beat 4
-    { note: 'D2', time: 4, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'F4', time: 4, type: 'melody', duration: 0.5, gain: 1.0 },
-    { note: 'F4', time: 4.5, type: 'melody', duration: 0.5, gain: 1.0 },
-
-    // Beat 5
-    { note: 'C2', time: 5, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'E4', time: 5, type: 'melody', duration: 0.5, gain: 1.0 },
-    { note: 'E4', time: 5.5, type: 'melody', duration: 0.5, gain: 1.0 },
-
-    // Beat 6
-    { note: 'G2', time: 6, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'D4', time: 6, type: 'melody', duration: 0.5, gain: 1.0 },
-    { note: 'D4', time: 6.5, type: 'melody', duration: 0.5, gain: 1.0 },
-
-    // Beat 7
-    { note: 'C2', time: 7, type: 'bass', duration: 1, gain: 0.7 },
-    { note: 'C4', time: 7, type: 'melody', duration: 1, gain: 1.0 },
-  ];
-
   useEffect(() => {
     const initializePiano = async () => {
       try {
         // Don't start Tone.js here - wait for user interaction
         const audioContext = Tone.getContext().rawContext;
         pianoRef.current = await SoundFont.instrument(audioContext, 'acoustic_grand_piano');
-
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to load piano soundfont:', error);
@@ -89,7 +48,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
     partRef.current?.dispose();
 
     // Create single part for the entire arrangement
-    partRef.current = new Tone.Part((time, event) => {
+    partRef.current = new Tone.Part((time, event: SongEvent) => {
       console.log("Tone.Part callback", time, event)
       if (pianoRef.current) {
         const adjustedGain = (volumeRef.current / 100) * event.gain;
@@ -98,7 +57,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
           gain: adjustedGain
         });
       }
-    }, twinkleArrangement);
+    }, song);
 
     partRef.current.loop = false;
 
@@ -122,7 +81,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
     } else {
       partRef.current.start(0);
 
-      const songEndTime = Math.max(...twinkleArrangement.map(event => event.time + event.duration));
+      const songEndTime = Math.max(...song.map(event => event.time + event.duration));
       endEventRef.current = Tone.getTransport().schedule((time) => {
         // Calculate song duration dynamically from arrangement
         console.log("end of playing");
