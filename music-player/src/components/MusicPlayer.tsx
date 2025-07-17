@@ -24,7 +24,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ songData }) => {
         // Don't start Tone.js here - wait for user interaction
         const audioContext = Tone.getContext().rawContext;
         pianoRef.current = await SoundFont.instrument(audioContext, 'acoustic_grand_piano');
-        Tone.getTransport().bpm.value = INITIAL_TEMPO;
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to load piano soundfont:', error);
@@ -74,6 +73,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ songData }) => {
       partRef.current.stop();
       setIsPlaying(false);
     } else {
+      Tone.getTransport().bpm.value = tempo;
       partRef.current.start(0);
       Tone.getTransport().start();
       setIsPlaying(true);
@@ -127,6 +127,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ songData }) => {
           <input
             id="tempo-slider"
             type="range"
+            step="5"
             min="120"
             max="240"
             value={tempo}
