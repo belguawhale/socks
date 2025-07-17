@@ -16,7 +16,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
   const pianoRef = useRef<SoundFont.Player>(null);
   const partRef = useRef<Tone.Part | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const endEventRef = useRef<number | null>(null);
 
   useEffect(() => {
     const initializePiano = async () => {
@@ -36,9 +35,6 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
 
     return () => {
       partRef.current?.dispose();
-      if (endEventRef.current !== null) {
-        Tone.getTransport().clear(endEventRef.current);
-      }
     };
   }, []);
 
@@ -60,7 +56,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
       }
     }, song);
 
-    partRef.current.loop = false;
+    partRef.current.loop = true;
+    partRef.current.loopEnd = 24;
 
   }, [isLoading]);
 
@@ -74,24 +71,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ audioSrc }) => {
     if (isPlaying) {
       Tone.getTransport().stop();
       partRef.current.stop();
-      if (endEventRef.current !== null) {
-        Tone.getTransport().clear(endEventRef.current);
-        endEventRef.current = null;
-      }
       setIsPlaying(false);
     } else {
       partRef.current.start(0);
-
-      const songEndTime = Math.max(...song.map(event => event.time + event.duration));
-      console.log("songEndTime", songEndTime);
-      endEventRef.current = Tone.getTransport().schedule((time) => {
-        // Calculate song duration dynamically from arrangement
-        console.log("end of playing");
-        setIsPlaying(false);
-        Tone.getTransport().stop();
-        endEventRef.current = null;
-      }, songEndTime);
-
       Tone.getTransport().start();
       setIsPlaying(true);
     }
