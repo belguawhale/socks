@@ -22,7 +22,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ songData }) => {
     const initializePiano = async () => {
       try {
         // Don't start Tone.js here - wait for user interaction
-        const audioContext = Tone.getContext().rawContext;
+        const audioContext = Tone.getContext().rawContext as AudioContext;
         pianoRef.current = await SoundFont.instrument(audioContext, 'acoustic_grand_piano');
         setIsLoading(false);
       } catch (error) {

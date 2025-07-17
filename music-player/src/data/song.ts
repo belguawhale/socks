@@ -7,6 +7,7 @@ export interface SongEvent {
     gain: number;
 }
 
+/*
 const twinkleArrangement: SongEvent[] = [
     // Beat 0
     { note: 'C2', time: 0, type: 'bass', duration: 1, gain: 0.7 },
@@ -46,6 +47,7 @@ const twinkleArrangement: SongEvent[] = [
     { note: 'C2', time: 7, type: 'bass', duration: 1, gain: 0.7 },
     { note: 'C4', time: 7, type: 'melody', duration: 1, gain: 1.0 },
 ];
+*/
 
 const mommaDontWearNoSocksArrangement: SongEvent[] = [
     { note: 'C3', time: 0, type: 'bass', duration: 1, gain: 1.0 },
@@ -133,6 +135,7 @@ const mommaDontWearNoSocksArrangement: SongEvent[] = [
     { note: 'A3', time: 23.5, type: 'bass', duration: 0.333, gain: 1.0 },
 ];
 
+/*
 const cMajorScale: SongEvent[] = [
     { note: 'C2', time: 0, type: 'bass', duration: 0.5, gain: 0.7 },
     { note: 'D2', time: 0.5, type: 'bass', duration: 0.5, gain: 0.7 },
@@ -157,6 +160,7 @@ const cMajorScale: SongEvent[] = [
     { note: 'B4', time: 10, type: 'bass', duration: 0.5, gain: 0.7 },
     { note: 'C5', time: 10.5, type: 'bass', duration: 0.5, gain: 0.7 },
 ];
+*/
 
 // export default twinkleArrangement;
 // export default cMajorScale;
