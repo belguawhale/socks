@@ -1,11 +1,11 @@
-import MusicPlayer from './components/MusicPlayer'
 import './App.css'
+import MusicPlayerAudioContextManager from './components/MusicPlayerAudioContextManager'
 import song from './data/song'
 
 function App() {
   return (
     <div className="app">
-      <MusicPlayer songData={song} />
+      <MusicPlayerAudioContextManager songData={song} />
     </div>
   )
 }
