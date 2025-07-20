@@ -60,7 +60,7 @@ const mommaDontWearNoSocksArrangement: SongEvent[] = [
     { note: 'C4', time: 1.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'E4', time: 1.5, type: 'bass', duration: 0.5, gain: 1.0 },
 
-    { note: 'D3', time: 2, type: 'bass', duration: 1, gain: 1.0 },
+    { note: 'D3', time: 2, type: 'bass', duration: 0.833, gain: 1.0 },
     { note: 'D4', time: 2.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'F4', time: 2.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'A4', time: 2.5, type: 'bass', duration: 0.5, gain: 1.0 },
@@ -82,7 +82,7 @@ const mommaDontWearNoSocksArrangement: SongEvent[] = [
     { note: 'C4', time: 5.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'E4', time: 5.5, type: 'bass', duration: 0.5, gain: 1.0 },
 
-    { note: 'D3', time: 6, type: 'bass', duration: 1, gain: 1.0 },
+    { note: 'D3', time: 6, type: 'bass', duration: 0.833, gain: 1.0 },
     { note: 'D4', time: 6.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'F4', time: 6.5, type: 'bass', duration: 0.5, gain: 1.0 },
     { note: 'A4', time: 6.5, type: 'bass', duration: 0.5, gain: 1.0 },
