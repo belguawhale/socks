@@ -4,6 +4,9 @@ import SoundFont from 'soundfont-player';
 import './MusicPlayer.css';
 import { type SongEvent } from '../data/song';
 import { INITIAL_TEMPO, INITIAL_VOLUME } from '../utils/constants';
+import PlayPauseButton from './controls/PlayPauseButton';
+import VolumeSlider from './controls/VolumeSlider';
+import TempoSlider from './controls/TempoSlider';
 
 interface MusicPlayerProps {
   songData: SongEvent[];
@@ -99,42 +102,16 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ songData }) => {
       </div>
 
       <div className="player-controls">
-        <button
-          className={`play-pause-btn ${isPlaying ? 'playing' : 'paused'} ${isLoading ? 'loading' : ''}`}
+        <PlayPauseButton
+          isPlaying={isPlaying}
+          isLoading={isLoading}
           onClick={togglePlayPause}
-          disabled={isLoading}
-        >
-          {isLoading ? '⏳' : (isPlaying ? '⏸️' : '▶️')}
-        </button>
+        />
       </div>
 
       <div className="player-sliders">
-        <div className="slider-group">
-          <label htmlFor="volume-slider">Volume: {volume}%</label>
-          <input
-            id="volume-slider"
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="slider volume-slider"
-          />
-        </div>
-
-        <div className="slider-group">
-          <label htmlFor="tempo-slider">Tempo: {tempo} BPM</label>
-          <input
-            id="tempo-slider"
-            type="range"
-            step="5"
-            min="120"
-            max="240"
-            value={tempo}
-            onChange={handleTempoChange}
-            className="slider tempo-slider"
-          />
-        </div>
+        <VolumeSlider volume={volume} onChange={handleVolumeChange} />
+        <TempoSlider tempo={tempo} onChange={handleTempoChange} />
       </div>
     </div>
   );
