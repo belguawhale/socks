@@ -27,6 +27,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: music-player
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,9 +38,7 @@ jobs:
         with:
           node-version: lts/*
           cache: 'npm'
-          cache-dependency-path: 'music-player/package-lock.json'
-      - name: Change to music-player directory
-        run: cd music-player
+          cache-dependency-path: 'package-lock.json'
       - name: Install dependencies
         run: npm ci
       - name: Build
