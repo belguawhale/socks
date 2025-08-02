@@ -35,6 +35,9 @@ jobs:
         with:
           node-version: lts/*
           cache: 'npm'
+          cache-dependency-path: 'music-player/package-lock.json'
+      - name: Change to music-player directory
+        run: cd music-player
       - name: Install dependencies
         run: npm ci
       - name: Build
